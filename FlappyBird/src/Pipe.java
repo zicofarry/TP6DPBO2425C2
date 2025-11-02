@@ -7,7 +7,8 @@ public class Pipe {
     private int height;
     private Image image;
     private int velocityX;
-    boolean passed;
+    private boolean passed;
+    private boolean top = false;
 
     public Pipe(int posX, int posY, int width, int height, Image image){
         this.posX = posX;
@@ -16,8 +17,13 @@ public class Pipe {
         this.height = height;
         this.image = image;
 
-        this.velocityX = -5;
+        this.velocityX = 0;
         this.passed = false;
+        this.top = posY < 0;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(posX, posY, width, height);
     }
 
     // tambahkan setter dan getter
@@ -43,7 +49,8 @@ public class Pipe {
 
     public void setVelocityX(int velocityX){ this.velocityX = velocityX; }
 
-    public void setPassed(boolean passed){ this.passed = passed; }
+    public boolean isPassed() { return passed; }
+    public boolean isTop() { return top; }
 
     public int getPosX(){ return this.posX; }
 
@@ -65,6 +72,7 @@ public class Pipe {
         return this.velocityX;
     }
 
-    public boolean getPassed(){ return this.passed;}
+    public void setPassed(boolean p) { this.passed = p; }
+    public void setIsTop(boolean t) { this.top = t; }
 
 }

@@ -18,6 +18,10 @@ public class Player {
         this.velocityY = -0;
     }
 
+    public Rectangle getBounds() {
+        return new Rectangle(posX, posY, width, height);
+    }
+    
     // tambahkan setter dan getter
     public void setPosX(int posX){
         this.posX = posX;

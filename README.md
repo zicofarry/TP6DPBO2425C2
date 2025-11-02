@@ -2,19 +2,35 @@
 _Saya Muhammad 'Azmi Salam dengan NIM 2406010 mengerjakan Tugas Praktikum 6 pada Mata Kuliah Desain dan Pemrograman Berorientasi Objek (DPBO) untuk keberkahan-Nya maka saya tidak melakukan kecurangan seperti yang telah dispesifikasikan. Aamiin_
 
 # Deskripsi & Desain Program
-Program ini merupakan implementasi permainan **Flappy Bird** yang dibangun menggunakan **Java Swing GUI**. User diarahkan untuk mengendalikan player sprite yang harus terus terbang dan menghindari rintangan yang bermunculan dari sisi kanan layar. Program ini mencakup berbagai komponen grafis untuk menampilkan player sprite, pipa/rintangan, latar belakang, serta kontrol dalam permainan.
+Program ini merupakan implementasi permainan **Flappy Bird** yang dibangun menggunakan **Java Swing GUI**, dengan arsitektur yang memisahkan antara logic (game mechanics) dan view (tampilan grafis).
+Pemain mengendalikan karakter utama agar terus melayang sambil menghindari pipa-pipa yang bergerak dari sisi kanan layar. Program ini mencakup pengaturan elemen grafis seperti latar belakang, sprite pemain, pipa, serta sistem kontrol dan skor.
 
-Program terdiri dari __5__ class, yaitu `App`, `FlappyBird`, `Player`, `Pipe`, dan `Score`. Program memiliki runnable class `App` yang akan menjalankan program utama (aplikasi, dengan membuka window).
+Program terdiri dari __5__ class, yaitu `App`, `Logic`, `Player`, `Pipe`, dan `View`. Program memiliki runnable class `App` yang akan menjalankan program utama (aplikasi, dengan membuka window).
 
 ## App.java
 Kelas ini adalah kelas utama yang menjalankan program dengan membuat window menggunakan `JFrame`, menambahkan panel permainan `FlappyBird`, dan mengatur properti seperti ukuran, lokasi, serta visibilitas window. Kelas ini bertindak sebagai entry point aplikasi dan belum mengandung logika permainan.
 
-## FlappyBird.java
-Kelas ini adalah kelas utama yang mengatur logika dalam permainan, termasuk rendering grafis, kontrol pemain, dan mekanisme permainan. Kelas ini merupakan turunan dari `JPanel` dan mengimplementasikan beberapa listener seperti `ActionListener`, `KeyListener`, dan `MouseListener` untuk memproses input pengguna.
+## Logic.java
+Kelas ini menangani **inti logika permainan**, seperti pergerakan pemain, deteksi tabrakan, pembaruan skor, serta pengaturan status permainan (running, paused, game over).
 
-Kelas ini memuat berbagai elemen permainan seperti latar belakang, pipa, player sprite, dan elemen UI lainnya, yang dirender menggunakan metode `paintComponent` dan `draw`. Logika permainan mencakup pergerakan pemain dengan gravitasi, deteksi tabrakan dengan pipa atau tanah, serta penghitungan skor saat pemain melewati pipa. Timer digunakan untuk mengatur loop permainan dan cooldown pipa, memastikan permainan berjalan dengan kecepatan konstan.
+Logic bertanggung jawab untuk:
+- Mengatur posisi dan kecepatan semua entitas (player, pipe).
+- Mengatur gravitasi dan kontrol input.
+- Menghitung skor saat pemain berhasil melewati pipa.
 
-Selain itu, kelas ini juga menangani kondisi seperti memulai permainan, menjeda, dan memulai ulang melalui input keyboard atau mouse. Secara keseluruhan, `FlappyBird.java` mengelola seluruh aspek permainan, mulai dari logika hingga tampilan grafis.
+Menentukan kapan permainan berakhir (collision).
+
+Kelas ini tidak melakukan rendering apa pun, tetapi menyediakan data dan status yang dibutuhkan oleh View.
+
+## View.java
+Kelas View menangani **tampilan dan interaksi pengguna**, sebagai turunan dari JPanel.
+Ia berkomunikasi dengan GameLogic untuk menampilkan posisi terbaru dari pemain, pipa, skor, serta kondisi permainan.
+Tanggung jawab GameView mencakup:
+- Menggambar seluruh elemen permainan di layar menggunakan paintComponent.
+- Menangani input pengguna melalui KeyListener dan MouseListener.
+- Menampilkan menu utama, tampilan pause, dan tampilan game over.
+
+Selain itu, View juga mengatur main menu dan tampilan game saat running.
 
 ## Player.java
 Kelas ini adalah kelas yang merepresentasikan player sprite dalam permainan, bertanggung jawab untuk menyimpan data posisi, ukuran, gambar, dan kecepatan vertikal player sprite. Kelas ini memiliki atribut seperti `posX` dan `posY` untuk menentukan posisi player sprite, `width` dan `height` untuk ukuran, serta `image` untuk menampilkan sprite player sprite.
@@ -26,15 +42,23 @@ Tidak jauh berbeda dengan penjelasan kelas sebelumnya, kelas ini adalah kelas ya
 
 Selain itu, atribut `passed` digunakan untuk menandai apakah pipa telah dilewati oleh pemain, yang berguna untuk penghitungan skor. Kelas ini juga menyediakan getter dan setter untuk setiap atribut dan konstruktor kelas ini digunakan untuk menginisialisasi semua atribut saat objek pipa dibuat, termasuk posisi awal, ukuran, gambar, dan kecepatan.
 
-## Score.java
-Kelas terakhir dalam penjelasan kelas ini juga merupakan kelas yang merepresentasikan objek pada permainan. pada `Score.java`, objek yang direpresentasikan adalah skor selama permainan berlangsung. Kelas ini hanya memiliki 1 atribut, yaitu `score` untuk mengatur poin dari user ketika sprite berhasil melintasi setiap pipa sebagai rintangannya.
-
 # Penjelasan
-Setelah program dijalankan, akan muncul `Jframe` window yang menampilkan menu awal dari permainan `Flappy Bird`. Pada menu awal, terdapat judul permainan, tombol untuk memulai permainan, dan instruksi untuk mengklik tombol tersebut untuk memulai permainan. Sesaat setelah klik, permainan akan dimulai dan user harus mempertahakan posisi player sprite agar tidak mencapai kondisi **game over**.
+Setelah dijalankan, akan muncul jendela permainan dengan **menu utama**.
+Tombol “Start” digunakan untuk memulai permainan, di mana pemain harus menjaga karakter agar tidak menabrak pipa atau jatuh ke tanah.
 
-Selama permainan, user dapat menekan tombol `space` untuk membuat player sprite mengepakkan sayapnya dan melompat lebih tinggi agar tidak terjatuh. Skor selama permainan dapat dilihat di atas-tengah layar yang bertambah setiap player melewati pipa. Selain itu, player dapat menghentikan permainan sementara dengan menekan tombol `esc`, dan window akan menampilkan menu saat **game paused**. Terdapat 3 opsi, yaitu **Resume** untuk melanjutkan permainan, **Restart** untuk mengulang dari awal, dan **Main Menu** untuk kembali pada kondisi awal permainan (judul dan tombol start).
+Selama permainan:
 
-Ketika player sprite bertemu pada kondisi game over (terlalu rendah, terlalu tinggi, dan menabrak sisi pipa), maka window akan menampilkan pesan game over dan skor user selama permainan berlangsung. Selain itu, juga terdapat instruksi untuk menekan karakter `R` untuk mengulang/restart permainan.
+* Tekan **Spasi** → karakter naik.
+* Tekan **ESC** → jeda permainan (pause overlay muncul).
+* Tekan **R** → restart permainan setelah game over.
+
+Ketika **game over**, layar akan menampilkan pesan akhir dan skor terakhir pemain. Menu **pause** menyediakan tiga pilihan:
+
+* **Resume** → melanjutkan permainan.
+* **Restart** → memulai ulang dari awal.
+* **Main Menu** → kembali ke tampilan awal.
 
 # Dokumentasi
 ## Screen Record
+https://github.com/user-attachments/assets/4d16f2fa-9033-43d6-86f1-4dfa4b1c8931
+
